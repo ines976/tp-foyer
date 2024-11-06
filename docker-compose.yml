@@ -30,5 +30,26 @@ services:
     stdin_open: true
     tty: true
 
+  prometheus:
+   image: prom/prometheus
+   container_name: prometheus-container
+   volumes:
+    - ./prometheus.yml:/etc/prometheus/prometheus.yml
+   ports:
+    - "9091:9090"
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana-container
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
 volumes:
   db:
+  grafana-data:
